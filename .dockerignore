@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+.venv311/
+venv/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Git / IDE
+.git/
+.gitignore
+.idea/
+.vscode/
+.DS_Store
+
+# 日志与数据
+logs/
+*.log
+*.db
+*.sqlite
+data/
+documents/
+output/
+
+# 环境变量与密钥（由 docker-compose 注入，不进镜像）
+.env
+.env.*
+
+# 测试与文档
+test/
+test_*.py
+*_test.py
+*.md
+*.xlsx
+*.html
+
+# 其它
+.deepeval/
+ragent/
+SuperMew/
+wenda_agent.db

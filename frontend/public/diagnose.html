@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>清除认证存储</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        .button:hover {
+            background: #2563eb;
+        }
+        .info {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .success {
+            color: #10b981;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 诊断工具</h1>
+    
+    <div class="info">
+        <h3>当前 localStorage 状态：</h3>
+        <pre id="storageInfo"></pre>
+    </div>
+
+    <button class="button" onclick="clearAuth()">清除认证存储</button>
+    <button class="button" onclick="clearAll()">清除所有 localStorage</button>
+    <button class="button" onclick="goToLogin()">前往登录页</button>
+
+    <div id="message"></div>
+
+    <script>
+        // 显示存储信息
+        function showStorage() {
+            const info = document.getElementById('storageInfo');
+            const authStorage = localStorage.getItem('auth-storage');
+            if (authStorage) {
+                try {
+                    const parsed = JSON.parse(authStorage);
+                    info.textContent = JSON.stringify(parsed, null, 2);
+                } catch (e) {
+                    info.textContent = authStorage;
+                }
+            } else {
+                info.textContent = 'auth-storage: 不存在';
+            }
+        }
+
+        // 清除认证存储
+        function clearAuth() {
+            localStorage.removeItem('auth-storage');
+            document.getElementById('message').innerHTML = 
+                '<p class="success">✅ 认证存储已清除</p>';
+            showStorage();
+        }
+
+        // 清除所有存储
+        function clearAll() {
+            localStorage.clear();
+            document.getElementById('message').innerHTML = 
+                '<p class="success">✅ 所有 localStorage 已清除</p>';
+            showStorage();
+        }
+
+        // 前往登录页
+        function goToLogin() {
+            window.location.href = '/login';
+        }
+
+        // 初始化
+        showStorage();
+    </script>
+</body>
+</html>
