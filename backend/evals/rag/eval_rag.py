@@ -50,9 +50,7 @@ DATASET_PATH = os.path.join(
 EVAL_USER_ID = os.getenv("EVAL_USER_ID", "eval_ragas_user")
 
 # 结果输出目录
-OUTPUT_DIR = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "results",
-)
+OUTPUT_DIR = os.path.join(_PROJECT_ROOT, "data", "eval", "rag")
 
 
 # ========== 加载评测数据集 ==========
@@ -350,7 +348,7 @@ def print_and_save_results(results: Dict[str, List[float]], samples: List[Dict])
         "answer_relevancy": results["answer_relevancy"],
     })
 
-    csv_path = os.path.join(OUTPUT_DIR, "ragas_eval_results.csv")
+    csv_path = os.path.join(OUTPUT_DIR, "ragas_eval_results_1.csv")
     results_df.to_csv(csv_path, index=False, encoding="utf-8-sig")
     print(f"\n📁 CSV 结果已保存到 {csv_path}")
 
@@ -370,7 +368,7 @@ def print_and_save_results(results: Dict[str, List[float]], samples: List[Dict])
             for i, s in enumerate(samples)
         ],
     }
-    json_path = os.path.join(OUTPUT_DIR, "ragas_eval_results.json")
+    json_path = os.path.join(OUTPUT_DIR, "ragas_eval_results_1.json")
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(results_json, f, ensure_ascii=False, indent=2)
     print(f"📁 JSON 结果已保存到 {json_path}")

@@ -20,7 +20,6 @@ const ChatPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState(null);
   const [currentTaskId, setCurrentTaskId] = useState(null);
-  const [deepThinking, setDeepThinking] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true); // 默认打开侧边栏
@@ -153,7 +152,6 @@ const ChatPage = () => {
       const taskId = await streamChat({
         question,
         conversationId,
-        deepThinking,
         // ✅ 收到 META 事件时立即设置 currentTaskId（用于中断）
         onMeta: ({ taskId: newTaskId, conversationId: newConvId }) => {
           console.log('✅ 收到 META 事件，设置 currentTaskId:', newTaskId);
@@ -337,7 +335,7 @@ const ChatPage = () => {
                 onBlur={() => setIsFocused(false)}
                 onCompositionStart={() => setIsComposing(true)}
                 onCompositionEnd={() => setIsComposing(false)}
-                placeholder={deepThinking ? '输入需要深度分析的问题...' : '输入你的问题...'}
+                placeholder='输入你的问题...'
                 disabled={isLoading}
                 rows={1}
                 className="max-h-40 min-h-[52px] w-full resize-none border-0 bg-transparent px-2 pt-2 pb-2 text-[15px] text-[#1F2937] placeholder:text-[#9CA3AF] focus:outline-none sm:text-base"
@@ -527,7 +525,7 @@ const ChatPage = () => {
                   onKeyPress={handleKeyPress}
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
-                  placeholder={deepThinking ? '输入需要深度分析的问题...' : '输入你的问题...'}
+                  placeholder='输入你的问题...'
                   disabled={isLoading}
                   rows={1}
                   className="max-h-40 min-h-[44px] w-full resize-none border-0 bg-transparent px-2 pt-2 pb-2 pr-2 text-[15px] text-[#333333] shadow-none placeholder:text-[#999999] focus-visible:ring-0 disabled:opacity-60"

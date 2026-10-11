@@ -11,7 +11,7 @@ from langsmith import traceable, set_run_metadata
 from backend.workflow.query_process.main_graph import query_app
 from backend.workflow.query_process.state import QueryGraphState
 from backend.schemas.user_context import UserContext
-from backend.schemas.chat import StopTaskRequest
+from backend.schemas.chat import StopTaskRequest, ChatRequest
 from backend.services.stream_task_manager import get_stream_task_manager
 from backend.utils.result import success_result
 from backend.utils.snowflake_id_utils import generate_snowflake_id_str
@@ -22,16 +22,17 @@ from backend.core.logger import logger
 router = APIRouter(prefix="/api/rag/v3", tags=["RAG Chat"])
 
 
-@router.get("/chat")
-async def chat(question: str, conversation_id: str = None, deep_thinking: bool = False):
+@router.post("/chat")
+async def chat(request: ChatRequest):
     """第一步：提交对话，返回 task_id 与 conversation_id，后台异步执行查询图
 
     Args:
-        question: 用户问题
-        conversation_id: 会话 ID（可选，空时创建新会话）
-        deep_thinking: 是否开启深度思考模式
+        request: 对话请求体（question、conversation_id）
     """
     try:
+        question = request.question
+        conversation_id = request.conversation_id
+
         # 生成任务 ID
         task_id = generate_snowflake_id_str()
 

@@ -1,7 +1,4 @@
-# Wenda Agent 全套容器化编排
 # 使用: docker compose up -d
-# 注意: 若宿主机已在本地跑 MySQL/Redis/Milvus/RustFS/Ollama，需先停掉，
-#       否则下方对外端口（3306/6379/19530/9000/11434）会冲突。
 
 # 后端服务公共配置（backend 共用）
 x-backend: &backend
@@ -17,7 +14,8 @@ x-backend: &backend
     REDIS_PORT: "6379"
     MILVUS_URI: http://milvus:19530
     RESTFS_URL: http://rustfs:9000
-    EMBEDDING_API_URL: http://ollama:11434/api/embed
+    # Ollama 在宿主机运行，容器内通过 host.docker.internal 访问（Docker Desktop）
+    EMBEDDING_API_URL: http://host.docker.internal:11434/api/embed
 
 services:
   mysql:
@@ -115,34 +113,6 @@ services:
     volumes:
       - rustfs_data:/data
 
-  # 本地 Embedding 服务
-  ollama:
-    image: ollama/ollama:latest
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama_data:/root/.ollama
-    # 如需 GPU 加速取消注释（Windows 走 Docker Desktop + WSL2 GPU）
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - driver: nvidia
-    #           count: all
-    #           capabilities: [gpu]
-
-  # 一次性任务：等待 ollama 就绪后拉取 bge-m3 模型
-  ollama-pull:
-    image: ollama/ollama:latest
-    environment:
-      OLLAMA_HOST: http://ollama:11434
-    volumes:
-      - ollama_data:/root/.ollama
-    entrypoint: ["/bin/sh", "-c"]
-    command: "until ollama list >/dev/null 2>&1; do sleep 2; done; ollama pull bge-m3"
-    depends_on:
-      - ollama
-    restart: "no"
 
   backend:
     <<: *backend
@@ -158,8 +128,6 @@ services:
       milvus:
         condition: service_healthy
       rustfs:
-        condition: service_started
-      ollama:
         condition: service_started
 
   frontend:
@@ -178,5 +146,4 @@ volumes:
   milvus_minio_data:
   milvus_data:
   rustfs_data:
-  ollama_data:
   backend_logs:

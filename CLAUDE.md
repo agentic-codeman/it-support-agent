@@ -59,7 +59,7 @@ python test_integration.py
 **查询流水线**（`agent/query_process/main_graph.py` → `query_app`）：
 
 ```
-node_item_name_confirm
+node_intent_confirm
   → （条件分支）若已产出 answer → node_answer_output
   → 否则 node_multi_search（分叉）
       ├─ node_search_embedding        （知识库稠密+稀疏混合检索）
@@ -67,7 +67,7 @@ node_item_name_confirm
   → node_join → node_rerank → node_answer_output → END
 ```
 
-`node_item_name_confirm` 负责加载历史、查询改写/拆分、意图解析，然后要么锁定唯一的 `collection_name`，要么直接产出歧义澄清/拒答的 `answer`（短路到输出）。状态是 `QueryGraphState`（`agent/query_process/state.py`）。
+`node_intent_confirm` 负责加载历史、查询改写/拆分、意图解析，然后要么锁定唯一的 `collection_name`，要么直接产出歧义澄清/拒答的 `answer`（短路到输出）。状态是 `QueryGraphState`（`agent/query_process/state.py`）。
 
 **导入流水线**（`agent/import_process/main_graph.py` → `kb_import_app`）：
 

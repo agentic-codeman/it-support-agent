@@ -29,7 +29,7 @@ function buildHeaders(extra = {}) {
 /**
  * 流式聊天（两步式）
  *
- * 第一步：GET /api/rag/v3/chat 提交问题，返回 { task_id, conversation_id }
+ * 第一步：POST /api/rag/v3/chat 提交问题，返回 { task_id, conversation_id }
  * 第二步：GET /api/rag/v3/stream/{task_id} 订阅 SSE 流，实时接收结果
  *
  * SSE 事件（命名事件，格式为 `event: xxx\ndata: {...}`）：
@@ -42,7 +42,6 @@ function buildHeaders(extra = {}) {
  * @param {Object} params - 聊天参数
  * @param {string} params.question - 用户问题
  * @param {string} [params.conversationId] - 会话 ID
- * @param {boolean} [params.deepThinking=false] - 是否开启深度思考
  * @param {Function} params.onMessage - 增量内容回调（参数为字符串 delta）
  * @param {Function} params.onComplete - 完成回调（参数为 { taskId, conversationId, answer, image_urls }）
  * @param {Function} params.onError - 错误回调（参数为 Error）
@@ -53,7 +52,6 @@ function buildHeaders(extra = {}) {
 export async function streamChat({
   question,
   conversationId,
-  deepThinking = false,
   onMessage,
   onComplete,
   onError,
@@ -64,18 +62,16 @@ export async function streamChat({
 
   try {
     // ---------- 第一步：提交任务，获取 task_id ----------
-    const params = new URLSearchParams({
-      question,
-      deep_thinking: deepThinking.toString(),
-    });
+    const body = { question };
     if (conversationId) {
-      params.append('conversation_id', conversationId);
+      body.conversation_id = conversationId;
     }
 
-    const chatUrl = `${API_BASE_URL}/api/rag/v3/chat?${params.toString()}`;
+    const chatUrl = `${API_BASE_URL}/api/rag/v3/chat`;
     const chatRes = await fetch(chatUrl, {
-      method: 'GET',
-      headers: buildHeaders({ Accept: 'application/json' }),
+      method: 'POST',
+      headers: buildHeaders({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify(body),
     });
 
     if (!chatRes.ok) {

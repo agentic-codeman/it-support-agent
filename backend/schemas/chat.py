@@ -12,6 +12,12 @@ class StopTaskRequest(BaseModel):
     task_id: str = Field(..., description="任务 ID")
 
 
+class ChatRequest(BaseModel):
+    """发起对话请求模型"""
+    question: str = Field(..., description="用户问题")
+    conversation_id: Optional[str] = Field(None, description="会话 ID（可选，空时创建新会话）")
+
+
 @dataclass
 class ChatMessage:
     """聊天消息数据类"""

@@ -67,8 +67,8 @@ def sort_by_score(scores: List[NodeScore]) -> List[NodeScore]:
     return sorted(scores, key=lambda x: x.score, reverse=True)
 
 
-def node_item_name_confirm(state: QueryGraphState) -> QueryGraphState:
-    logger.info(">>> node_item_name_confirm: 开始处理")
+def node_intent_confirm(state: QueryGraphState) -> QueryGraphState:
+    logger.info(">>> node_intent_confirm: 开始处理")
 
     question = state.get("question", "")
     conversation_id = state["conversation_id"];
@@ -101,7 +101,7 @@ def node_item_name_confirm(state: QueryGraphState) -> QueryGraphState:
 if __name__ == "__main__":
     # 测试代码块
     print("\n" + "="*50)
-    print(">>> 启动 node_item_name_confirm 本地测试")
+    print(">>> 启动 node_intent_confirm 本地测试")
     print("="*50)
     
     # 模拟输入状态
@@ -115,7 +115,7 @@ if __name__ == "__main__":
 
     try:
         # 运行节点
-        result = node_item_name_confirm(mock_state)
+        result = node_intent_confirm(mock_state)
         
         print("\n" + "="*50)
         print(">>> 测试结果摘要:")
